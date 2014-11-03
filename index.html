@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js ie7 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js ie8 lt-ie9"><![endif]-->
+<!--[if IE 9]><html class="no-js ie9 lt-ie10"><![endif]-->
+<html class="no-js" ng-app="tipDivider">
+<head>
+  <meta charset="utf-8" />
+  <title>Tip Divider</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link rel="stylesheet" href="css/style.css" media="screen" />
+  <!--[if IE]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+<body ng-controller="TipController">
+  <div class="container">
+    <div class="center">
+      <h1 class="current">Tip Divider</h1>
+    </div>
+    <label for="totalTips"><strong>Total Amount To Split:</strong> $&nbsp;<input type="text" name="totalTips" value="0" ng-change="updateTotals()" ng-model="totalTips"></label>
+    <label for="totalHours"><strong>Total Hours To Split:</strong>&nbsp;<input type="text" name="totalHours" value="1" ng-change="updateTotals()" ng-model="totalHours"></label>
+    <strong>Remaining Money: </strong>$ {{remainingMoney}}
+    <strong>Remaining Hours: </strong> {{remainingHours}}
+    <fieldset>
+      <legend>Enter in your each employees info</legend>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Hours</th>
+            <th align="middle">Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody ng-repeat="item in items" on-finish-render="repeatFinished()">
+          <tr id="field-{{$index}}">
+            <td><input ng-model="item.name" type="text" ng-change="updateTotals()" name="name" value="" placeholder="Employee Name"></td>
+            <td><input ng-model="item.hours" type="text" ng-change="updateTotals()" name="hours" value="0" placeholder="Employee Hours"></td>
+            <td align="middle"><strong>$<span class="employee-total">{{item.split}}</span></strong></td>
+            <td align="right"><div class="controls"><button ng-show="$index == items.length - 1" type="button" class="button red" my-add data-id="field-{{$index}}">Add Another</button><button ng-hide="$index == 0" type="button" class="button" my-remove data-id="field-{{$index}}">Remove</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </fieldset>
+  </div>
+  <script src="js/script.js"></script>
+</body>
+</html>
