@@ -1,17 +1,18 @@
 /* global store, angular */
 var STORE_KEY = 'divider.tips';
 var STORE_TOTALS = 'divider.tips.totals';
+// open the storage, or create an empty object
 var globalItems = store.get(STORE_KEY) || [{
   name: 'Persons Name',
   hours: 0,
   split: 0
 }];
-var globalTotals = store.get(STORE_TOTALS) || [{
+var globalTotals = store.get(STORE_TOTALS) || {
   totalTips: 0,
   remainingMoney: 0,
   remainingHours: 1,
   totalHours: 1
-}];
+};
 if (globalItems.length > 1) {
   // remove the hashkey
   globalItems = globalItems.map(function(obj){
