@@ -1,8 +1,16 @@
+/* global store, angular */
 var STORE_KEY = 'divider.tips';
+var STORE_TOTALS = 'divider.tips.totals';
 var globalItems = store.get(STORE_KEY) || [{
-  name: 'First',
+  name: 'Persons Name',
   hours: 0,
   split: 0
+}];
+var globalTotals = store.get(STORE_TOTALS) || [{
+  totalTips: 0,
+  remainingMoney: 0,
+  remainingHours: 1,
+  totalHours: 1
 }];
 if (globalItems.length > 1) {
   // remove the hashkey
@@ -13,10 +21,10 @@ if (globalItems.length > 1) {
 }
 var angularapp = angular.module('tipDivider', []);
 angularapp.controller('TipController', function($scope) {
-  $scope.totalTips = 0;
-  $scope.remainingMoney = 0;
-  $scope.remainingHours = 1;
-  $scope.totalHours = 1;
+  $scope.totalTips = globalTotals.totalTips;
+  $scope.remainingMoney = globalTotals.remainingMoney;
+  $scope.remainingHours = globalTotals.remainingHours;
+  $scope.totalHours = globalTotals.totalHours;
   $scope.items = globalItems;
   $scope.updateTotals = function() {
     var hourly = ($scope.totalTips / $scope.totalHours).toFixed(2);
@@ -34,13 +42,27 @@ angularapp.controller('TipController', function($scope) {
     store.set(STORE_KEY, items.map(function(obj){
       // return a new object with the props I want to save
       return {
-        name: obj.name, hours: obj.hours
+        name: obj.name,
+        hours: obj.hours
       };
     }));
+    store.set(STORE_TOTALS, {
+      totalTips : $scope.totalTips,
+      remainingMoney : $scope.remainingMoney,
+      remainingHours : $scope.remainingHours,
+      totalHours : $scope.totalHours
+    });
   };
+  $scope.updateTotals();
   $scope.$on('ngRepeatFinished', function(ngRepeatFinishedEvent) {
     document.querySelector('tbody').classList.remove('loading');
   });
+  $scope.clearStorage = function() {
+    if (confirm('Clear the storage?')) {
+      store.clear();
+      window.location.reload();
+    }
+  };
 });
 angularapp.directive('onFinishRender', function ($timeout) {
   return {
